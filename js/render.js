@@ -1,16 +1,31 @@
 var CFG = null;
 var liveInterval = null;
 
+// Holds uploaded custom images (data URLs) - kept outside the DOM-driven CFG
+// since <input type="file"> does not persist its read content across renders.
+var customAssets = {
+  hourIndex: null,
+  minuteTick: null,
+  handHour: null,
+  handMinute: null,
+  handSecond: null
+};
+
 function readCFG(){
   return {
     dial: {
+      shape: document.querySelector('input[name="dialShape"]:checked').value,
       diameterMM: parseFloat($("diameter").value) || 200,
+      cornerRadius: parseFloat($("cornerRadius").value) || 0,
       strokeWidth: parseFloat($("dialStroke").value) || 2,
       bgColor: $("dialBg").value,
       strokeColor: $("dialColor").value,
       minuteTicks: $("minuteTicks").checked,
       tickLength: parseFloat($("tickLen").value) || 3,
       tickWidth: parseFloat($("tickWidth").value) || 0.6,
+      customTicks: $("customTicks").checked,
+      customTickImage: customAssets.minuteTick,
+      customTickSize: parseFloat($("customTickSize").value) || 3,
       subdials: $("subdials").checked,
       subdialCount: parseInt($("subdialCount").value) || 3,
       subdialRadius: parseFloat($("subdialRadius").value) || 15,
@@ -26,7 +41,8 @@ function readCFG(){
       distance: parseFloat($("indexDistance").value) || 85,
       color: $("indexColor").value,
       traditionalFour: $("traditionalFour").checked,
-      emphasizeCardinal: $("emphasizeCardinal").checked
+      emphasizeCardinal: $("emphasizeCardinal").checked,
+      customImage: customAssets.hourIndex
     },
     hands: {
       hour: {
@@ -34,14 +50,16 @@ function readCFG(){
         length: parseFloat($("hourLength").value) || 50,
         width: parseFloat($("hourWidth").value) || 6,
         tail: parseFloat($("hourTail").value) || 15,
-        color: $("hourColor").value
+        color: $("hourColor").value,
+        customImage: customAssets.handHour
       },
       minute: {
         shape: $("minuteShape").value,
         length: parseFloat($("minuteLength").value) || 72,
         width: parseFloat($("minuteWidth").value) || 4,
         tail: parseFloat($("minuteTail").value) || 15,
-        color: $("minuteColor").value
+        color: $("minuteColor").value,
+        customImage: customAssets.handMinute
       },
       second: {
         enabled: $("secondEnabled").checked,
@@ -49,7 +67,8 @@ function readCFG(){
         length: parseFloat($("secondLength").value) || 82,
         width: parseFloat($("secondWidth").value) || 1.5,
         tail: parseFloat($("secondTail").value) || 25,
-        color: $("secondColor").value
+        color: $("secondColor").value,
+        customImage: customAssets.handSecond
       }
     },
     mode: document.querySelector('input[name="mode"]:checked').value,
@@ -107,11 +126,30 @@ function renderAll(){
     (CFG.mode === "live" ? dict["mode-live"] : dict["mode-static"]);
 
   toggleStaticTimeVisibility();
+  toggleConditionalFields(CFG);
 }
 
 function toggleStaticTimeVisibility(){
   var isLive = document.querySelector('input[name="mode"]:checked').value === "live";
   $("staticTimeField").style.display = isLive ? "none" : "block";
+}
+
+// Shows/hides fields whose relevance depends on other selected options.
+function toggleConditionalFields(cfg){
+  $("cornerRadiusField").style.display = cfg.dial.shape === "square" ? "block" : "none";
+  $("diameterLabel").textContent = i18n[currentLang][cfg.dial.shape === "square" ? "field-side" : "field-diameter"];
+
+  $("customTickUploadField").style.display = cfg.dial.customTicks ? "block" : "none";
+  $("tickWidth").closest(".field").style.display = cfg.dial.customTicks ? "none" : "block";
+
+  $("customIndexUploadField").style.display = cfg.indices.style === "custom" ? "block" : "none";
+  $("indexColor").closest(".field").style.display = cfg.indices.style === "custom" ? "none" : "block";
+
+  ["hour","minute","second"].forEach(function(which){
+    var isCustom = cfg.hands[which].shape === "custom";
+    $(which + "CustomUploadField").style.display = isCustom ? "block" : "none";
+    $(which + "Tail").closest(".field").style.display = isCustom ? "none" : "block";
+  });
 }
 
 function startLiveClock(){
@@ -126,7 +164,7 @@ function stopLiveClock(){
 
 function onModeChange(){
   var mode = document.querySelector('input[name="mode"]:checked').value;
-  document.querySelectorAll(".mode-toggle button").forEach(function(b){
+  document.querySelectorAll(".mode-toggle button[data-mode]").forEach(function(b){
     b.classList.toggle("active", b.dataset.mode === mode);
   });
   if(mode === "live") startLiveClock(); else stopLiveClock();

@@ -1,3 +1,20 @@
+// Reads an uploaded file (SVG/PNG/JPG) as a data URL and stores it in customAssets, then re-renders.
+function wireFileInput(inputId, assetKey, statusId){
+  var input = $(inputId);
+  if(!input) return;
+  input.addEventListener("change", function(){
+    var file = input.files && input.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      customAssets[assetKey] = e.target.result;
+      if(statusId && $(statusId)) $(statusId).textContent = file.name;
+      renderAll();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 window.addEventListener("load", function(){
   applyI18n();
 
@@ -7,19 +24,37 @@ window.addEventListener("load", function(){
   });
 
   // mode toggle buttons (static/live)
-  document.querySelectorAll(".mode-toggle button").forEach(function(b){
+  document.querySelectorAll(".mode-toggle button[data-mode]").forEach(function(b){
     b.addEventListener("click", function(){
       document.querySelector('input[name="mode"][value="' + b.dataset.mode + '"]').checked = true;
       onModeChange();
     });
   });
 
+  // dial shape toggle (circle/square)
+  document.querySelectorAll(".mode-toggle button[data-shape]").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.querySelector('input[name="dialShape"][value="' + b.dataset.shape + '"]').checked = true;
+      document.querySelectorAll(".mode-toggle button[data-shape]").forEach(function(x){
+        x.classList.toggle("active", x === b);
+      });
+      renderAll();
+    });
+  });
+
   // wire every input/select/checkbox/color to re-render on change/input
-  var allInputs = document.querySelectorAll(".controls input, .controls select");
+  var allInputs = document.querySelectorAll(".controls input:not([type=file]), .controls select");
   allInputs.forEach(function(el){
-    var evt = (el.type === "checkbox" || el.tagName === "SELECT") ? "change" : "input";
+    var evt = (el.type === "checkbox" || el.type === "radio" || el.tagName === "SELECT") ? "change" : "input";
     el.addEventListener(evt, function(){ renderAll(); });
   });
+
+  // custom file uploads
+  wireFileInput("hourIndexFile", "hourIndex", "hourIndexFileName");
+  wireFileInput("minuteTickFile", "minuteTick", "minuteTickFileName");
+  wireFileInput("hourHandFile", "handHour", "hourHandFileName");
+  wireFileInput("minuteHandFile", "handMinute", "minuteHandFileName");
+  wireFileInput("secondHandFile", "handSecond", "secondHandFileName");
 
   // export buttons
   $("btnDlDial").addEventListener("click", exportDial);

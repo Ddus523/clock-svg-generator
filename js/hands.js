@@ -1,6 +1,6 @@
 // Builds a hand shape in LOCAL coordinates, tip pointing up (negative Y), pivot at (0,0).
 // L = length in mm (from pivot to tip), W = max width in mm, tailPct = tail length as % of L.
-function buildHandLocalMarkup(handCfg, L){
+function buildHandLocalMarkup(handCfg, L, skipPivotDot){
   var W = handCfg.width;
   var tail = L * (handCfg.tail / 100);
   var color = handCfg.color;
@@ -46,6 +46,18 @@ function buildHandLocalMarkup(handCfg, L){
       return s;
     }
 
+    case "custom": {
+      if(handCfg.customImage){
+        // Bottom-anchored (xMidYMax) so the pivot end stays fixed regardless of the image's aspect ratio.
+        var img = '<image href="' + handCfg.customImage + '" x="' + round(-W/2) + '" y="' + round(-L) + '" ' +
+             'width="' + round(W) + '" height="' + round(L) + '" preserveAspectRatio="xMidYMax meet"/>';
+        return img;
+      }
+      // placeholder while no file has been uploaded yet
+      return '<line x1="0" y1="' + round(tail) + '" x2="0" y2="' + round(-L) + '" ' +
+             'stroke="' + color + '" stroke-width="' + W + '" stroke-linecap="round" stroke-dasharray="2,2"/>';
+    }
+
     default:
       return "";
   }
@@ -67,8 +79,8 @@ function buildHandStandaloneSVG(cfg, which){
   var viewSize = round((L + pad) * 2);
   var cx = viewSize / 2, cy = viewSize / 2;
   var local = buildHandLocalMarkup(handCfg, L);
-  var inner = '<g transform="translate(' + cx + ',' + cy + ')">' + local +
-    '<circle cx="0" cy="0" r="' + round(handCfg.width*0.5) + '" fill="' + handCfg.color + '"/>' +
-    '</g>';
+  var pivotDot = handCfg.shape === "custom" ? "" :
+    '<circle cx="0" cy="0" r="' + round(handCfg.width*0.5) + '" fill="' + handCfg.color + '"/>';
+  var inner = '<g transform="translate(' + cx + ',' + cy + ')">' + local + pivotDot + '</g>';
   return svgWrap(viewSize, viewSize, inner);
 }

@@ -1,18 +1,23 @@
+// Returns the list of hour numbers to mark, in correct clock positions.
+function hourList(count){
+  return count === 12 ? [1,2,3,4,5,6,7,8,9,10,11,12] : [12,3,6,9];
+}
+
 function buildIndicesMarkup(cfg, cx, cy, R){
   var idx = cfg.indices;
   if(idx.style === "none") return "";
 
   var s = "";
-  var step = idx.count === 12 ? 1 : 3;
+  var hours = hourList(idx.count);
   var distMM = R * (idx.distance / 100);
 
-  for(var h = 1; h <= 12; h += step){
+  hours.forEach(function(h){
     var a = h * 30;
     var isCardinal = (h % 3 === 0);
     var scale = (idx.emphasizeCardinal && isCardinal) ? 1.35 : 1;
     var pos = polar(cx, cy, distMM, a);
     s += buildSingleIndex(idx, h, pos.x, pos.y, a, scale);
-  }
+  });
   return s;
 }
 
@@ -25,6 +30,17 @@ function buildSingleIndex(idx, hourNum, x, y, angleDeg, scale){
     return '<text x="' + x + '" y="' + round(y + size * 0.35) + '" text-anchor="middle" ' +
            'font-family="Sora, sans-serif" font-size="' + round(size) + '" font-weight="700" ' +
            'fill="' + color + '">' + label + '</text>\n';
+  }
+
+  if(idx.style === "custom"){
+    if(idx.customImage){
+      // Always upright (not rotated), per user preference.
+      return '<image href="' + idx.customImage + '" x="' + round(x - size/2) + '" y="' + round(y - size/2) + '" ' +
+             'width="' + round(size) + '" height="' + round(size) + '" preserveAspectRatio="xMidYMid meet"/>\n';
+    }
+    // placeholder while no file has been uploaded yet
+    return '<rect x="' + round(x - size/2) + '" y="' + round(y - size/2) + '" width="' + round(size) + '" height="' + round(size) + '" ' +
+           'fill="none" stroke="' + color + '" stroke-width="0.5" stroke-dasharray="1.5,1.5"/>\n';
   }
 
   // geometric shapes: build in local space then translate + rotate to face outward
