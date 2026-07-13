@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Clock Face SVG Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Sora:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="lang-wrap">
+  <div class="lang-pill" data-lang="it">
+    <button data-lang="it" class="active">IT</button>
+    <button data-lang="en">EN</button>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-body">
+    <span class="badge"><span class="badge-dot"></span><span data-i18n="badge">SVG Generator</span></span>
+    <h1 class="hero-title"><span data-i18n="hero-title-1">Clock Face </span><em data-i18n="hero-title-em">SVG Generator</em></h1>
+    <p class="hero-sub" data-i18n="hero-sub">Crea quadranti d'orologio personalizzati ed esporta ogni livello in SVG.</p>
+  </div>
+</section>
+
+<div class="tool-header">
+  <h1 data-i18n="tool-h1">Progetta il tuo orologio</h1>
+  <p data-i18n="tool-p">Configura quadrante, indici e lancette. L'anteprima si aggiorna in tempo reale.</p>
+</div>
+
+<div class="workspace">
+
+  <div class="controls">
+
+    <!-- DIAL PANEL -->
+    <details class="panel" open>
+      <summary><span data-i18n="panel-dial">Quadrante</span></summary>
+      <div class="panel-body">
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="field-diameter">Diametro (mm)</label>
+            <input type="number" id="diameter" value="200" min="40" max="600" step="1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-dial-stroke">Spessore bordo (mm)</label>
+            <input type="number" id="dialStroke" value="2" min="0" max="20" step="0.1">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="field-dial-bg">Colore sfondo</label>
+            <input type="color" id="dialBg" value="#ffffff">
+          </div>
+          <div class="field">
+            <label data-i18n="field-dial-color">Colore bordo/tratti</label>
+            <input type="color" id="dialColor" value="#111111">
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <label class="toggle-field">
+          <div class="toggle-text">
+            <span data-i18n="toggle-minute-ticks">Tacche dei minuti</span>
+            <small data-i18n="toggle-minute-ticks-hint">60 tacche lungo il bordo</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="minuteTicks" checked><span class="slider"></span></span>
+        </label>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="field-tick-len">Lunghezza tacche (mm)</label>
+            <input type="number" id="tickLen" value="3" min="0.5" max="20" step="0.5">
+          </div>
+          <div class="field">
+            <label data-i18n="field-tick-w">Spessore tacche (mm)</label>
+            <input type="number" id="tickWidth" value="0.6" min="0.1" max="5" step="0.1">
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <label class="toggle-field">
+          <div class="toggle-text">
+            <span data-i18n="toggle-subdials">Sotto-quadranti</span>
+            <small data-i18n="toggle-subdials-hint">Cerchi decorativi (stile cronografo)</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="subdials"><span class="slider"></span></span>
+        </label>
+        <div class="row3">
+          <div class="field">
+            <label data-i18n="field-subdial-count">Quantità</label>
+            <input type="number" id="subdialCount" value="3" min="1" max="4" step="1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-subdial-radius">Raggio (mm)</label>
+            <input type="number" id="subdialRadius" value="15" min="2" max="60" step="1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-subdial-dist">Distanza (%)</label>
+            <input type="number" id="subdialDistance" value="55" min="10" max="90" step="1">
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="field">
+          <label data-i18n="field-center-text">Testo centrale</label>
+          <input type="text" id="centerText" value="" data-i18n-ph="field-center-text-ph" placeholder="es. Ludwing Watch Co.">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="field-center-text-size">Dimensione testo (mm)</label>
+            <input type="number" id="centerTextSize" value="8" min="2" max="40" step="0.5">
+          </div>
+          <div class="field">
+            <label data-i18n="field-center-text-y">Offset verticale (%)</label>
+            <input type="number" id="centerTextY" value="30" min="-90" max="90" step="1">
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- INDICES PANEL -->
+    <details class="panel" open>
+      <summary><span data-i18n="panel-indices">Indici delle ore</span></summary>
+      <div class="panel-body">
+        <div class="field">
+          <label data-i18n="field-index-style">Stile</label>
+          <select id="indexStyle">
+            <option value="arabic" data-i18n="opt-idx-arabic">Numeri arabi</option>
+            <option value="roman" data-i18n="opt-idx-roman">Numeri romani</option>
+            <option value="dash" selected data-i18n="opt-idx-dash">Trattino</option>
+            <option value="dot" data-i18n="opt-idx-dot">Pallino</option>
+            <option value="square" data-i18n="opt-idx-square">Quadrato</option>
+            <option value="triangle" data-i18n="opt-idx-triangle">Triangolo</option>
+            <option value="diamond" data-i18n="opt-idx-diamond">Rombo</option>
+            <option value="none" data-i18n="opt-idx-none">Nessuno</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="field-index-count">Quantità</label>
+            <select id="indexCount">
+              <option value="12" data-i18n="opt-count-12">12 (tutte le ore)</option>
+              <option value="4" data-i18n="opt-count-4">4 (12-3-6-9)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="field-index-color">Colore</label>
+            <input type="color" id="indexColor" value="#111111">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i18n="field-index-size">Dimensione (mm)</label>
+            <input type="number" id="indexSize" value="10" min="2" max="40" step="0.5">
+          </div>
+          <div class="field">
+            <label data-i18n="field-index-dist">Distanza dal centro (%)</label>
+            <input type="number" id="indexDistance" value="85" min="30" max="98" step="1">
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <label class="toggle-field">
+          <div class="toggle-text">
+            <span data-i18n="toggle-trad-four">Stile tradizionale "IIII"</span>
+            <small data-i18n="toggle-trad-four-hint">Usa IIII invece di IV</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="traditionalFour"><span class="slider"></span></span>
+        </label>
+        <label class="toggle-field">
+          <div class="toggle-text">
+            <span data-i18n="toggle-emphasize">Enfatizza 12-3-6-9</span>
+            <small data-i18n="toggle-emphasize-hint">Indici cardinali più grandi</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="emphasizeCardinal"><span class="slider"></span></span>
+        </label>
+      </div>
+    </details>
+
+    <!-- HANDS PANEL -->
+    <details class="panel" open>
+      <summary><span data-i18n="panel-hands">Lancette</span></summary>
+      <div class="panel-body">
+
+        <div class="section-label" data-i18n="hands-hour">Lancetta ore</div>
+        <div class="field">
+          <label data-i18n="field-hand-shape">Forma</label>
+          <select id="hourShape">
+            <option value="baton" data-i18n="opt-hand-baton">Baguette (lineare)</option>
+            <option value="sword" selected data-i18n="opt-hand-sword">Spada (affusolata)</option>
+            <option value="dauphine" data-i18n="opt-hand-dauphine">Dauphine (a rombo)</option>
+            <option value="breguet" data-i18n="opt-hand-breguet">Breguet (con anello)</option>
+          </select>
+        </div>
+        <div class="row3">
+          <div class="field">
+            <label data-i18n="field-hand-length">Lungh. (%)</label>
+            <input type="number" id="hourLength" value="50" min="10" max="95" step="1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-hand-width">Spessore</label>
+            <input type="number" id="hourWidth" value="6" min="0.5" max="30" step="0.5">
+          </div>
+          <div class="field">
+            <label data-i18n="field-hand-tail">Coda (%)</label>
+            <input type="number" id="hourTail" value="15" min="0" max="50" step="1">
+          </div>
+        </div>
+        <div class="field">
+          <label data-i18n="field-hand-color">Colore</label>
+          <input type="color" id="hourColor" value="#111111">
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="section-label" data-i18n="hands-minute">Lancetta minuti</div>
+        <div class="field">
+          <label data-i18n="field-hand-shape">Forma</label>
+          <select id="minuteShape">
+            <option value="baton" data-i18n="opt-hand-baton">Baguette (lineare)</option>
+            <option value="sword" selected data-i18n="opt-hand-sword">Spada (affusolata)</option>
+            <option value="dauphine" data-i18n="opt-hand-dauphine">Dauphine (a rombo)</option>
+            <option value="breguet" data-i18n="opt-hand-breguet">Breguet (con anello)</option>
+          </select>
+        </div>
+        <div class="row3">
+          <div class="field">
+            <label data-i18n="field-hand-length">Lungh. (%)</label>
+            <input type="number" id="minuteLength" value="72" min="10" max="98" step="1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-hand-width">Spessore</label>
+            <input type="number" id="minuteWidth" value="4" min="0.5" max="30" step="0.5">
+          </div>
+          <div class="field">
+            <label data-i18n="field-hand-tail">Coda (%)</label>
+            <input type="number" id="minuteTail" value="15" min="0" max="50" step="1">
+          </div>
+        </div>
+        <div class="field">
+          <label data-i18n="field-hand-color">Colore</label>
+          <input type="color" id="minuteColor" value="#111111">
+        </div>
+
+        <div class="sep"></div>
+
+        <label class="toggle-field">
+          <div class="toggle-text">
+            <span data-i18n="toggle-second-hand">Mostra lancetta dei secondi</span>
+          </div>
+          <span class="switch"><input type="checkbox" id="secondEnabled" checked><span class="slider"></span></span>
+        </label>
+        <div class="section-label" data-i18n="hands-second">Lancetta secondi</div>
+        <div class="field">
+          <label data-i18n="field-hand-shape">Forma</label>
+          <select id="secondShape">
+            <option value="baton" selected data-i18n="opt-hand-baton">Baguette (lineare)</option>
+            <option value="sword" data-i18n="opt-hand-sword">Spada (affusolata)</option>
+            <option value="dauphine" data-i18n="opt-hand-dauphine">Dauphine (a rombo)</option>
+            <option value="breguet" data-i18n="opt-hand-breguet">Breguet (con anello)</option>
+          </select>
+        </div>
+        <div class="row3">
+          <div class="field">
+            <label data-i18n="field-hand-length">Lungh. (%)</label>
+            <input type="number" id="secondLength" value="82" min="10" max="98" step="1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-hand-width">Spessore</label>
+            <input type="number" id="secondWidth" value="1.5" min="0.3" max="15" step="0.1">
+          </div>
+          <div class="field">
+            <label data-i18n="field-hand-tail">Coda (%)</label>
+            <input type="number" id="secondTail" value="25" min="0" max="50" step="1">
+          </div>
+        </div>
+        <div class="field">
+          <label data-i18n="field-hand-color">Colore</label>
+          <input type="color" id="secondColor" value="#e63946">
+        </div>
+      </div>
+    </details>
+
+    <!-- MODE PANEL -->
+    <details class="panel" open>
+      <summary><span data-i18n="panel-mode">Modalità anteprima</span></summary>
+      <div class="panel-body">
+        <div class="mode-toggle">
+          <button type="button" data-mode="static" class="active" data-i18n="mode-static">Statica</button>
+          <button type="button" data-mode="live" data-i18n="mode-live">Live (ora reale)</button>
+        </div>
+        <input type="radio" name="mode" value="static" checked style="display:none">
+        <input type="radio" name="mode" value="live" style="display:none">
+
+        <div class="field" id="staticTimeField">
+          <label data-i18n="field-static-time">Orario da mostrare</label>
+          <div class="row3">
+            <input type="number" id="staticH" value="10" min="0" max="11" step="1" title="Ore">
+            <input type="number" id="staticM" value="10" min="0" max="59" step="1" title="Minuti">
+            <input type="number" id="staticS" value="30" min="0" max="59" step="1" title="Secondi">
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- EXPORT PANEL -->
+    <div class="panel">
+      <div class="section-label" data-i18n="panel-export">Esporta SVG</div>
+      <p class="hint" style="margin-bottom:var(--sp4)" data-i18n="export-hint">Ogni livello viene esportato come file SVG indipendente.</p>
+      <div class="export-panel">
+        <button class="btn-dl" id="btnDlDial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-i18n="btn-dl-dial">Quadrante</span>
+        </button>
+        <button class="btn-dl" id="btnDlIndices">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-i18n="btn-dl-indices">Indici</span>
+        </button>
+        <button class="btn-dl" id="btnDlHour">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-i18n="btn-dl-hour">Lancetta ore</span>
+        </button>
+        <button class="btn-dl" id="btnDlMinute">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-i18n="btn-dl-minute">Lancetta minuti</span>
+        </button>
+        <button class="btn-dl" id="btnDlSecond" style="grid-column:span 2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-i18n="btn-dl-second">Lancetta secondi</span>
+        </button>
+        <button class="btn-dl btn-dl-all" id="btnDlAll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span data-i18n="btn-dl-all">Scarica tutti (5 file)</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="preview">
+    <div class="preview-card">
+      <div class="preview-topbar">
+        <span class="preview-title">PREVIEW</span>
+        <div class="preview-dots">
+          <span style="background:#ff5f57"></span>
+          <span style="background:#febc2e"></span>
+          <span style="background:#28c840"></span>
+        </div>
+      </div>
+      <div id="svg-wrapper">
+        <svg id="clockSvg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="info-bar" id="info-bar-text"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer data-i18n="footer">Realizzato per progetti di orologeria, laser-cutting e design generativo.</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/dial.js"></script>
+<script src="js/indices.js"></script>
+<script src="js/hands.js"></script>
+<script src="js/render.js"></script>
+<script src="js/export.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
