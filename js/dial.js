@@ -47,7 +47,8 @@ function buildDialMarkup(cfg, cx, cy, R){
       if(d.customTicks && d.customTickImage){
         var cpos = polar(cx, cy, rMid, a);
         var cw = d.customTickSize, ch = d.tickLength;
-        s += '<g transform="translate(' + cpos.x + ',' + cpos.y + ') rotate(' + a + ')">' +
+        var tickRot = a + (d.customTickRotation || 0);
+        s += '<g transform="translate(' + cpos.x + ',' + cpos.y + ') rotate(' + round(tickRot) + ')">' +
              '<image href="' + d.customTickImage + '" x="' + round(-cw/2) + '" y="' + round(-ch/2) + '" ' +
              'width="' + round(cw) + '" height="' + round(ch) + '" preserveAspectRatio="xMidYMid meet"/></g>\n';
       } else {

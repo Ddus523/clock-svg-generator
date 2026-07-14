@@ -26,6 +26,7 @@ function readCFG(){
       customTicks: $("customTicks").checked,
       customTickImage: customAssets.minuteTick,
       customTickSize: parseFloat($("customTickSize").value) || 3,
+      customTickRotation: parseFloat($("tickIconRotation").value) || 0,
       centerText: $("centerText").value,
       centerTextSize: parseFloat($("centerTextSize").value) || 8,
       centerTextY: parseFloat($("centerTextY").value) || 30
@@ -38,7 +39,8 @@ function readCFG(){
       color: $("indexColor").value,
       traditionalFour: $("traditionalFour").checked,
       emphasizeCardinal: $("emphasizeCardinal").checked,
-      customImage: customAssets.hourIndex
+      customImage: customAssets.hourIndex,
+      customRotation: parseFloat($("indexIconRotation").value) || 0
     },
     hands: {
       hour: {

@@ -34,9 +34,10 @@ function buildSingleIndex(idx, hourNum, x, y, angleDeg, scale){
 
   if(idx.style === "custom"){
     if(idx.customImage){
-      // Always upright (not rotated), per user preference.
-      return '<image href="' + idx.customImage + '" x="' + round(x - size/2) + '" y="' + round(y - size/2) + '" ' +
-             'width="' + round(size) + '" height="' + round(size) + '" preserveAspectRatio="xMidYMid meet"/>\n';
+      var rot = idx.customRotation || 0;
+      return '<g transform="translate(' + x + ',' + y + ') rotate(' + round(rot) + ')">' +
+             '<image href="' + idx.customImage + '" x="' + round(-size/2) + '" y="' + round(-size/2) + '" ' +
+             'width="' + round(size) + '" height="' + round(size) + '" preserveAspectRatio="xMidYMid meet"/></g>\n';
     }
     // placeholder while no file has been uploaded yet
     return '<rect x="' + round(x - size/2) + '" y="' + round(y - size/2) + '" width="' + round(size) + '" height="' + round(size) + '" ' +
