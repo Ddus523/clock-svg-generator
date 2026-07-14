@@ -109,6 +109,10 @@
               <label data-i18n="field-custom-tick-size">Dimensione immagine (mm)</label>
               <input type="number" id="customTickSize" value="3" min="0.5" max="30" step="0.5">
             </div>
+            <div class="field" style="margin-bottom:0">
+              <label data-i18n="field-icon-rotation">Rotazione icona (°)</label>
+              <input type="number" id="tickIconRotation" value="0" min="-180" max="180" step="1">
+            </div>
           </div>
         </div>
 
@@ -153,7 +157,11 @@
           <label data-i18n="btn-upload">Carica file (SVG, PNG, JPG)</label>
           <input type="file" id="hourIndexFile" accept=".svg,image/svg+xml,image/png,image/jpeg">
           <div class="hint" id="hourIndexFileName"></div>
-          <div class="hint" data-i18n="hint-custom-index">L'immagine resta sempre dritta (non ruota).</div>
+          <div class="hint" data-i18n="hint-custom-index">L'immagine resta sempre dritta (non ruota automaticamente).</div>
+          <div class="field" style="margin-top:var(--sp3);margin-bottom:0">
+            <label data-i18n="field-icon-rotation">Rotazione icona (°)</label>
+            <input type="number" id="indexIconRotation" value="0" min="-180" max="180" step="1">
+          </div>
         </div>
         <div class="row2">
           <div class="field">
