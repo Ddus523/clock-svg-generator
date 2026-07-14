@@ -26,10 +26,6 @@ function readCFG(){
       customTicks: $("customTicks").checked,
       customTickImage: customAssets.minuteTick,
       customTickSize: parseFloat($("customTickSize").value) || 3,
-      subdials: $("subdials").checked,
-      subdialCount: parseInt($("subdialCount").value) || 3,
-      subdialRadius: parseFloat($("subdialRadius").value) || 15,
-      subdialDistance: parseFloat($("subdialDistance").value) || 55,
       centerText: $("centerText").value,
       centerTextSize: parseFloat($("centerTextSize").value) || 8,
       centerTextY: parseFloat($("centerTextY").value) || 30
@@ -51,7 +47,8 @@ function readCFG(){
         width: parseFloat($("hourWidth").value) || 6,
         tail: parseFloat($("hourTail").value) || 15,
         color: $("hourColor").value,
-        customImage: customAssets.handHour
+        customImage: customAssets.handHour,
+        iconRotation: parseFloat($("hourIconRotation").value) || 0
       },
       minute: {
         shape: $("minuteShape").value,
@@ -59,7 +56,8 @@ function readCFG(){
         width: parseFloat($("minuteWidth").value) || 4,
         tail: parseFloat($("minuteTail").value) || 15,
         color: $("minuteColor").value,
-        customImage: customAssets.handMinute
+        customImage: customAssets.handMinute,
+        iconRotation: parseFloat($("minuteIconRotation").value) || 0
       },
       second: {
         enabled: $("secondEnabled").checked,
@@ -68,7 +66,8 @@ function readCFG(){
         width: parseFloat($("secondWidth").value) || 1.5,
         tail: parseFloat($("secondTail").value) || 25,
         color: $("secondColor").value,
-        customImage: customAssets.handSecond
+        customImage: customAssets.handSecond,
+        iconRotation: parseFloat($("secondIconRotation").value) || 0
       }
     },
     mode: document.querySelector('input[name="mode"]:checked').value,

@@ -21,7 +21,7 @@ function roundedSquarePath(cx, cy, half, r){
   ].join(' ');
 }
 
-// Builds the dial layer markup (background shape + minute ticks + subdials + center text).
+// Builds the dial layer markup (background shape + minute ticks + center text).
 // cfg: full CFG object. cx,cy,R are the drawing center and outer "radius" (half-side for square) in mm.
 function buildDialMarkup(cfg, cx, cy, R){
   var d = cfg.dial;
@@ -57,22 +57,6 @@ function buildDialMarkup(cfg, cx, cy, R){
              'stroke="' + d.strokeColor + '" stroke-width="' + d.tickWidth + '" stroke-linecap="round"/>\n';
       }
     }
-  }
-
-  if(d.subdials){
-    var positions = [];
-    if(d.subdialCount === 1) positions = [180];
-    else if(d.subdialCount === 2) positions = [90, 270];
-    else if(d.subdialCount === 3) positions = [90, 180, 270];
-    else positions = [0, 90, 180, 270].slice(0, d.subdialCount);
-    var distMM = R * (d.subdialDistance / 100);
-    positions.forEach(function(a){
-      var c = polar(cx, cy, distMM, a);
-      s += '<circle cx="' + c.x + '" cy="' + c.y + '" r="' + d.subdialRadius + '" ' +
-           'fill="none" stroke="' + d.strokeColor + '" stroke-width="' + round(d.strokeWidth * 0.6) + '"/>\n';
-      s += '<circle cx="' + c.x + '" cy="' + c.y + '" r="' + round(d.subdialRadius * 0.06) + '" ' +
-           'fill="' + d.strokeColor + '"/>\n';
-    });
   }
 
   if(d.centerText && d.centerText.trim() !== ""){

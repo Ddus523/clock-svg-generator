@@ -63,14 +63,15 @@ function buildHandLocalMarkup(handCfg, L, skipPivotDot){
   }
 }
 
-// Returns markup for the preview, positioned at (cx,cy) and rotated to angleDeg.
+// Returns markup for the preview, positioned at (cx,cy) and rotated to angleDeg (+ any custom icon offset).
 function buildHandPreviewMarkup(handCfg, cx, cy, radiusBase, angleDeg){
   var L = radiusBase * (handCfg.length / 100);
   var local = buildHandLocalMarkup(handCfg, L);
-  return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + angleDeg + ')">' + local + '</g>\n';
+  var offset = (handCfg.shape === "custom" && handCfg.iconRotation) ? handCfg.iconRotation : 0;
+  return '<g transform="translate(' + cx + ',' + cy + ') rotate(' + round(angleDeg + offset) + ')">' + local + '</g>\n';
 }
 
-// Standalone SVG export: hand pointing straight up (12 o'clock), pivot centered in viewBox.
+// Standalone SVG export: hand pointing straight up (12 o'clock) + icon rotation offset, pivot centered in viewBox.
 function buildHandStandaloneSVG(cfg, which){
   var handCfg = cfg.hands[which];
   var R = cfg.dial.diameterMM / 2;
@@ -81,6 +82,7 @@ function buildHandStandaloneSVG(cfg, which){
   var local = buildHandLocalMarkup(handCfg, L);
   var pivotDot = handCfg.shape === "custom" ? "" :
     '<circle cx="0" cy="0" r="' + round(handCfg.width*0.5) + '" fill="' + handCfg.color + '"/>';
-  var inner = '<g transform="translate(' + cx + ',' + cy + ')">' + local + pivotDot + '</g>';
+  var offset = (handCfg.shape === "custom" && handCfg.iconRotation) ? handCfg.iconRotation : 0;
+  var inner = '<g transform="translate(' + cx + ',' + cy + ') rotate(' + round(offset) + ')">' + local + pivotDot + '</g>';
   return svgWrap(viewSize, viewSize, inner);
 }
